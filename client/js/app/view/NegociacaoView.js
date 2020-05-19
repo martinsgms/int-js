@@ -1,5 +1,6 @@
 class NegociacaoView extends View {
 
+
     template(model) {
         return `
             <table class="table table-hover table-bordered">

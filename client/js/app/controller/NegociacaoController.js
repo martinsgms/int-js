@@ -7,7 +7,11 @@ class NegociacaoController {
         this._inputValor = $('#valor');
 
         this._negociacaoView = new NegociacaoView($('#negociacaoView'));
-        this._listaNegociacoes = new ListaNegociacoes();
+
+        this._listaNegociacoes = new ListaNegociacoes(model => 
+            this._negociacaoView.update(model)
+        );
+
         this._mensagem = new Mensagem();
         this._mensagemView = new MensagemView($('#mensagemView'));
 
@@ -32,8 +36,16 @@ class NegociacaoController {
 
         this._clearForm();
 
-        // console.log(DateHelper.dateToText(negociacao.data));
+        // console.log(DateHelper.dateToText(negociacao.data)); 
         // console.log(this._listaNegociacoes);
+    }
+
+    apaga() {
+        this._listaNegociacoes.truncate();
+        this._negociacaoView.update(this._listaNegociacoes);
+
+        this._mensagem.texto = "Negociações apagadas com sucesso";
+        this._mensagemView.update(this._mensagem);
     }
 
     _clearForm() {
