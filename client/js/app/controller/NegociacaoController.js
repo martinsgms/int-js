@@ -5,12 +5,13 @@ class NegociacaoController {
         this._inputData = $('#data');
         this._inputQuantidade = $('#quantidade');
         this._inputValor = $('#valor');
+
         this._negociacaoView = new NegociacaoView($('#negociacaoView'));
         this._listaNegociacoes = new ListaNegociacoes();
         this._mensagem = new Mensagem();
         this._mensagemView = new MensagemView($('#mensagemView'));
-        this._mensagemView.update(this._mensagem); 
 
+        this._mensagemView.update(this._mensagem); 
         this._negociacaoView.update(this._listaNegociacoes);
     }
 
