@@ -4,7 +4,9 @@ class View {
         this._element = element;
     }
 
+    template() {throw new Error("Implemente o método 'template'");}
+
     update(model) {
-        this._element.innerHTML = this._template(model);
+        this._element.innerHTML = this.template(model);
     }
 }
