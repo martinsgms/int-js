@@ -8,7 +8,7 @@ class NegociacaoController {
         this.negociacaoView = new NegociacaoView($('#negociacaoView'));
         this._listaNegociacoes = new ListaNegociacoes();
 
-        this.negociacaoView.update();
+        this.negociacaoView.update(this._listaNegociacoes);
     }
 
     adiciona(event) {
@@ -20,11 +20,13 @@ class NegociacaoController {
             this._inputValor.value
             );
             
-        console.log(DateHelper.dateToText(negociacao.data));
-        
         this._listaNegociacoes.add(negociacao);
+        this.negociacaoView.update(this._listaNegociacoes);
+
         this._clearForm();
-        console.log(this._listaNegociacoes);
+
+        // console.log(DateHelper.dateToText(negociacao.data));
+        // console.log(this._listaNegociacoes);
     }
 
     _clearForm() {
