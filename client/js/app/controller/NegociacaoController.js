@@ -7,6 +7,8 @@ class NegociacaoController {
         this._inputQuantidade = $('#quantidade');
         this._inputValor = $('#valor');
 
+        this._service = new NegociacaoService();
+
         this._listaNegociacoes = new Bind(new ListaNegociacoes(), new NegociacaoView($('#negociacaoView')),
             "add", "truncate");
 
@@ -34,24 +36,15 @@ class NegociacaoController {
     }
 
     importar() {
-        let http = new XMLHttpRequest();
-
-        http.open("GET", "negociacoes/semana");
-        http.onreadystatechange = () => {
-            
-            if(http.readyState != 4) 
+       this._service.obterNegociacoesSemana((error, listNegociacoes) => {
+            if(error) {
+                this._mensagem.texto = error;
                 return;
-            
-            if(http.status != 200)
-                this._mensagem.texto = "Não foi possível importar as Negociações";
+            }
 
-            JSON.parse(http.responseText).forEach(e => 
-                this._listaNegociacoes.add(new Negociacao(new Date(e.data), e.quantidade, e.valor))
-            );
-
+            listNegociacoes.forEach(n => this._listaNegociacoes.add(n));
             this._mensagem.texto = "Negociações importadas com sucesso!";
-        };
-        http.send();
+       });
     }
 
     _clearForm() {
