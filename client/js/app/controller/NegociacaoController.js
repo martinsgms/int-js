@@ -43,9 +43,13 @@ class NegociacaoController {
                 return;
             
             if(http.status != 200)
-                throw new Error("Houve algum problema na requisição");
+                this._mensagem.texto = "Não foi possível importar as Negociações";
 
-            console.log("Importação OK");
+            JSON.parse(http.responseText).forEach(e => 
+                this._listaNegociacoes.add(new Negociacao(new Date(e.data), e.quantidade, e.valor))
+            );
+
+            this._mensagem.texto = "Negociações importadas com sucesso!";
         };
         http.send();
     }
