@@ -14,7 +14,7 @@ class NegociacaoController {
             "texto");
     }
 
-    adiciona(event) {
+    adicionar(event) {
         event.preventDefault();
         
         let negociacao = new Negociacao(
@@ -28,9 +28,26 @@ class NegociacaoController {
         this._clearForm();
     }
 
-    apaga() {
+    apagar() {
         this._listaNegociacoes.truncate();
         this._mensagem.texto = "Negociações apagadas com sucesso";
+    }
+
+    importar() {
+        let http = new XMLHttpRequest();
+
+        http.open("GET", "negociacoes/semana");
+        http.onreadystatechange = () => {
+            
+            if(http.readyState != 4) 
+                return;
+            
+            if(http.status != 200)
+                throw new Error("Houve algum problema na requisição");
+
+            console.log("Importação OK");
+        };
+        http.send();
     }
 
     _clearForm() {
