@@ -58,21 +58,21 @@
     <script>
 
         let n = new Proxy(new ListaNegociacoes(), {
-            get:
-                function(target, prop, receiver){
-                    if(["add", "truncate"].includes(prop) && typeof(target[prop]) == typeof(Function)) {
-                        return function() {
-                            console.log(`[SET] prop ${prop} interceptado pelo proxy`);
-                            return Reflect.apply(target[prop], target, arguments);
-                        }
+            get(target, prop, receiver) {
+                if(["add", "truncate"].includes(prop) && typeof(target[prop]) == typeof(Function)) {
+                    return function() {
+                        console.log(`[SET] prop ${prop} interceptado pelo proxy`);
+                        Reflect.apply(target[prop], target, arguments);
                     }
-                    
-                    console.log(`[GET] prop ${prop} interceptado pelo proxy`);
-                    return Reflect.get(target, prop, receiver);
                 }
+                
+                console.log(`[GET] prop ${prop} interceptado pelo proxy`);
+                return Reflect.get(target, prop, receiver);
+            }
         })
-
-        console.log(n.add(new Negociacao(new Date, 10, 20)));
+        
+        n.add(new Negociacao(new Date(), 10, 20));
+        console.log(n.negociacoes);
    
     </script>
 
