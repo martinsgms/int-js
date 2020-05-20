@@ -57,27 +57,23 @@
 
     <script>
 
-        let n = new Proxy(new Negociacao(new Date(), 1, 10), {
+        let n = new Proxy(new ListaNegociacoes(), {
             get:
                 function(target, prop, receiver){
+                    if(["add", "truncate"].includes(prop) && typeof(target[prop]) == typeof(Function)) {
+                        return function() {
+                            console.log(`[SET] prop ${prop} interceptado pelo proxy`);
+                            return Reflect.apply(target[prop], target, arguments);
+                        }
+                    }
+                    
                     console.log(`[GET] prop ${prop} interceptado pelo proxy`);
                     return Reflect.get(target, prop, receiver);
                 }
-            ,
-            set: 
-                function(target, prop, value, receiver) {
-                    console.log(`[SET] prop ${prop} mudou de valor. ${target[prop]} => ${value}`);
-                    return Reflect.set(target, prop, value, receiver);
-                }
-            
         })
 
-        // dispara as ações do proxy da execução do método da classe  
-        // o retorno real nem ocorrerá se não especificarmos usando Reflect
-        console.log(n.valor);
-        n._valor = 20;
-        console.log(n.valor);
-        
+        console.log(n.add(new Negociacao(new Date, 10, 20)));
+   
     </script>
 
 </body>
