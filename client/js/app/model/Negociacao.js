@@ -4,7 +4,7 @@ class Negociacao {
         this._data = new Date(data);
         this._quantidade = quantidade;
         this._valor = valor;
-        //Object.freeze(this);
+        Object.freeze(this);
     }
 
     get volume() {
