@@ -45,7 +45,7 @@ class NegociacaoController {
             negociacoes
                 .reduce((arrayAchatado, arrayAtual) => arrayAchatado.concat(arrayAtual), [])
                 .forEach(n => this._listaNegociacoes.add(n));
-            this._mensagem.texto = "Importação feito com sucesso";
+            this._mensagem.texto = "Importação feita com sucesso";
         })
         .catch(error => this._mensagem.texto = error);
     }
