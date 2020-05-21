@@ -36,30 +36,18 @@ class NegociacaoController {
     }
 
     importar() {
-        this._service.obterNegociacoesSemanaAtual()
-            .then(negociacoes => {
-                negociacoes.forEach(n => this._listaNegociacoes.add(n));
-                this._mensagem.texto = "Negociações dessa semana importadas com sucesso!";
-                console.log("primeira");
-                
-            })
-            .catch(error => this._mensagem.texto = error);
-     
-        this._service.obterNegociacoesSemanaPassada()
-            .then(negociacoes => {
-                negociacoes.forEach(n => this._listaNegociacoes.add(n));
-                this._mensagem.texto = "Negociações da semana passada importadas com sucesso!";
-                console.log("segunda");
-            })
-            .catch(error => this._mensagem.texto = error);
-     
-        this._service.obterNegociacoesSemanaRetrasada()
-            .then(negociacoes => {
-                negociacoes.forEach(n => this._listaNegociacoes.add(n));
-                this._mensagem.texto = "Negociações da semana retrasada importadas com sucesso!";
-                console.log("terceira");
-            })
-            .catch(error => this._mensagem.texto = error);
+        Promise.all([
+            this._service.obterNegociacoesSemanaAtual(),
+            this._service.obterNegociacoesSemanaPassada(),
+            this._service.obterNegociacoesSemanaRetrasada()
+        ])
+        .then(negociacoes => {
+            negociacoes
+                .reduce((arrayAchatado, arrayAtual) => arrayAchatado.concat(arrayAtual), [])
+                .forEach(n => this._listaNegociacoes.add(n));
+            this._mensagem.texto = "Importação feito com sucesso";
+        })
+        .catch(error => this._mensagem.texto = error);
     }
 
     _clearForm() {
