@@ -9,7 +9,7 @@ class HttpService {
                     return;
                 
                 if(http.status != 200)
-                    reject("Não foi possível importar as Negociações dessa semana");
+                    reject(http.responseText);
 
                 resolve(JSON.parse(http.responseText));
             };
