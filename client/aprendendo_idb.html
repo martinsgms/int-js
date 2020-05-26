@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aprendendo IndexedDB</title>
+</head>
+<body>
+    <script src="js/app/model/Negociacao.js"></script>
+    <script>
+        var connection;
+        var openRequest = window.indexedDB.open("aluraframe", 3);
+
+        openRequest.onupgradeneeded = e => {
+            console.log("Cria ou altera um banco já existente");
+
+            var connectionAlura = e.target.result;
+
+            if(connectionAlura.objectStoreNames.contains("Negociacoes")) 
+                connectionAlura.deleteObjectStore("Negociacoes");
+
+            connectionAlura.createObjectStore("Negociacoes", { autoIncrement: true }); 
+        };
+
+        openRequest.onsuccess = e => {
+            console.log("Conectado com sucesso");
+            connection = e.target.result;
+        };
+
+        openRequest.onerror = e => {
+            console.log(e.target.error);
+        };
+
+        function adicionar() {
+            let transaction = connection.transaction(["Negociacoes"], "readwrite");
+            let objectStore = transaction.objectStore("Negociacoes");
+
+            let negociacao = new Negociacao(new Date(), 2, 300);
+
+            let request = objectStore.add(negociacao);
+
+            request.onsuccess = e => {
+                console.log("Negociação adicionada com sucesso!");
+            };
+
+            request.onerror = e => {
+                console.log("Erro ao adicionar Negociação");
+            };
+        }
+
+    </script>    
+</body>
+</html>
