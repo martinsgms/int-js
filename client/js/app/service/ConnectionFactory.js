@@ -1,14 +1,17 @@
 var ConnectionFactory = (function () {
-    var dbName = "aluraframe";
-    var version = 3;
-    var objectStores = ["Negociacoes"];
+    
+    const dbName = "aluraframe";
+    const version = 3;
+    const objectStores = ["Negociacoes"];
+    
     var connection = null;
-
+    var closeCon = null;
+    
     return class ConnectionFactory {
 
         constructor() { throw new Error("Classe não instanciável") }
 
-        static getConnection() {
+        static open() {
             return new Promise((resolve, reject) => {
                 let openConnection = window.indexedDB.open(dbName, version);
 
@@ -17,7 +20,12 @@ var ConnectionFactory = (function () {
                 };
         
                 openConnection.onsuccess = e => {
-                    resolve(connection ? connection : e.target.result);
+                    if(!connection) {
+                        connection = e.target.result;
+                        closeCon = connection.close.bind(connection);
+                        connection.close = () => { throw new Error("Não chame este método diretamente") }
+                    }
+                    resolve(connection);
                 };
         
                 openConnection.onerror = e => {
@@ -34,6 +42,13 @@ var ConnectionFactory = (function () {
 
                 connection.createObjectStore(o, { autoIncrement: true });
             });
+        }
+
+        static close() {
+            if(connection) {
+                closeCon();
+                connection = null;
+            }
         }
     }
 })();
