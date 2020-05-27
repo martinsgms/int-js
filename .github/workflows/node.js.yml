@@ -11,8 +11,11 @@ on:
 
 jobs:
   build:
-
+    
     runs-on: ubuntu-latest
+    
+    env:
+      working-directory: ./server
 
     strategy:
       matrix:
@@ -24,7 +27,12 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: cd ../../server
+      
     - run: npm ci
+      working-directory: ${{env.working-directory}}
+      
     - run: npm run build --if-present
+      working-directory: ${{env.working-directory}}
+      
     - run: npm test
+      working-directory: ${{env.working-directory}}
